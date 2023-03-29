@@ -12,14 +12,21 @@ private:
 public:
 	Process(Job _job) : process_no_(_job.job_no), arrival_time_(_job.arrival_time), brust_time_(_job.brust_time), cur_brust_time_(_job.brust_time){}
 	~Process() {}
-	void tick() {
-		if (brust_time_ <= 0) {
-			throw std::exception("process tick but already dead..");
-		}
-		brust_time_--;
+
+public:
+	int getNo() {
+		return process_no_;
 	}
+
+	void tick(int work) {
+		brust_time_ -= work;
+		if (brust_time_ < 0) {
+			brust_time_ = 0;
+		}
+	}
+
 	bool isDead() {
-		return cur_brust_time_ == 0;
+		return cur_brust_time_ <= 0;
 	}
 };
 

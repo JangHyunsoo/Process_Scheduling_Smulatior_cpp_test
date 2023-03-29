@@ -1,6 +1,8 @@
 ﻿#include <iostream>
 #include <sstream>
+#include "SchedulerManager.h"
 #include "JobSimulator.h"
+#include "ProcessorManager.h"
 
 using namespace std;
 
@@ -10,11 +12,7 @@ void printJob(Job& job) {
 
 int main()
 {
-	JobSimulator::getInstance()->init();
-	auto job_inst = JobSimulator::getInstance();
-	while (!job_inst->isEmpty())
-	{
-		auto job = job_inst->getJob();
-		printJob(job);
-	}
+	SchedulerManager::getInstance()->init();
+	SchedulerManager::getInstance()->run();
+
 }

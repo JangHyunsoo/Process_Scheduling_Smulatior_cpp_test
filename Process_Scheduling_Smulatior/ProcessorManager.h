@@ -1,6 +1,7 @@
 #pragma once
 #include "Processor.h"
 #include <vector>
+#include <list>
 
 class ProcessorManager
 {
@@ -19,19 +20,44 @@ public:
 private:
 	int p_core_count;
 	int e_core_count;
-	std::vector<Processor> core_vec_;
+	std::vector<Processor> processor_vec_;
 public:
 	void init() {
-		core_vec_ = std::vector<Processor>();
+		processor_vec_ = std::vector<Processor>();
 		for (int i = 0; i < p_core_count; i++)
 		{
-			core_vec_.push_back(Processor(core_vec_.size() - 1, CoreType::PERFOR));
+			processor_vec_.push_back(Processor(processor_vec_.size() - 1, ProcessorType::PERFOR));
 		}
 		for (int i = 0; i < e_core_count; i++)
 		{
-			core_vec_.push_back(Processor(core_vec_.size() - 1, CoreType::EFFIC));
+			processor_vec_.push_back(Processor(processor_vec_.size() - 1, ProcessorType::EFFIC));
+		}
+	}
+	
+	int countAvailable() {
+		int count = 0;
+		for (auto processor : processor_vec_) {
+			if (!processor.isRun())
+				count++;
 		}
 
+		return count;
+	}
+
+	/// <returns>queue empty : True / queue non-empty : False</returns>
+	bool appendProcess(std::queue<Process>& _process_queue) {
+		int psr_size = processor_vec_.size();
+
+		for (int i = 0; i < psr_size; i++)
+		{
+			if (!processor_vec_[i].isRun()) {
+				processor_vec_[i].addProcess(std::shared_ptr<Process>(&_process_queue.front()));
+				_process_queue.pop();
+			}
+		}
+		return _process_queue.empty();
 	}
 };
+
+ProcessorManager* ProcessorManager::instance_ = nullptr;
 
