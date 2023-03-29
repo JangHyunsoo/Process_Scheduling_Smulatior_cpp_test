@@ -19,9 +19,9 @@ public:
 	}
 
 	void tick(int work) {
-		brust_time_ -= work;
-		if (brust_time_ < 0) {
-			brust_time_ = 0;
+		cur_brust_time_ -= work;
+		if (cur_brust_time_ < 0) {
+			cur_brust_time_ = 0;
 		}
 	}
 

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <queue>
 #include <list>
+#include <memory>
 
 class JobSimulator
 {
@@ -37,14 +38,23 @@ public:
 		job_vec_ = std::vector<Job>();
 		job_queue_ = std::queue<Job>();
 		initRandom();
-		for (int i = 0; i < 10; i++)
+		for (int i = 0; i < 30; i++)
 		{
 			addJobByRandom();
+		}
+
+		for (auto job : job_vec_)
+		{
+			printJob(job);
 		}
 		carryQueue();
 	}
 	bool isEmpty() {
 		return job_queue_.empty();
+	}
+
+	bool isDone() {
+		return isEmpty();
 	}
 
 	Job& getJob() {
@@ -53,19 +63,19 @@ public:
 		return job;
 	}
 	std::list<Job>& getJobs(int total_tick) {
-		std::list<Job> ret = std::list<Job>();
+		std::list<Job>* ret = new std::list<Job>();
 		
-		if (job_queue_.empty()) return ret;
+		if (job_queue_.empty()) return *ret;
 	
 		while (!job_queue_.empty())
 		{
 			if (job_queue_.front().arrival_time <= total_tick) {
-				ret.push_back(job_queue_.front());
+				ret->push_back(job_queue_.front());
 				job_queue_.pop();
 			}
 			else break;
 		}
-		return ret;
+		return *ret;
 	}
 private:
 	void initRandom() {
@@ -75,7 +85,7 @@ private:
 	}
 	void addJob(int _arrival_time, int _brust_time) {
 		
-		job_vec_.push_back(Job{ ++job_count, _arrival_time, _brust_time });
+		job_vec_.push_back(Job{++job_count, _arrival_time, _brust_time });
 	}
 	void addJobByRandom() {
 		addJob(arrival_time_dis_(gen), brust_time_dis_(gen));
@@ -89,6 +99,11 @@ private:
 			job_queue_.push(item);
 		}
 	}
+
+	void printJob(Job& job) {
+		std::cout << "No: " << job.job_no << "\t\tA.T: " << job.arrival_time << "\t\tB.T: " << job.brust_time << '\n';
+	}
+
 };
 
 JobSimulator* JobSimulator::instance_ = nullptr;

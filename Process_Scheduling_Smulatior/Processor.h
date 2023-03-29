@@ -2,6 +2,7 @@
 #include "Process.h"
 #include <memory>
 #include <vector>
+#include <iostream>
 
 enum class ProcessorType
 {
@@ -32,15 +33,13 @@ public:
 		return *cur_process_;
 	}
 	bool isRun() {
-		return !is_run_;
+		if (cur_process_ == nullptr) return false;
+		else return is_run_;
 	}
 
 	void addProcess(std::shared_ptr<Process> _process) {
-		if (!_process->isDead()) {
-			cur_process_ = _process;
-			is_run_ = true;
-		}
-
+		cur_process_ = _process;
+		is_run_ = true;
 	}
 	void tick() {
 		if (is_run_) {
@@ -53,7 +52,21 @@ public:
 			}
 		}
 		else {
-			history_.push_back(-1);
+			history_.push_back(0);
 		}
+	}
+
+	void printHistory(int total_time) {
+		std::cout << "P" << processor_no_ << " :\t";
+		for (int i = 0; i <= total_time; i++)
+		{
+			if (history_.size() - 1 <= i) {
+				std::cout << "0\t";
+			}
+			else {
+				std::cout << history_[i] << "\t";
+			}
+		}
+		std::cout << '\n';
 	}
 };
