@@ -1,7 +1,9 @@
 #pragma once
 #include "Processor.h"
+#include <iostream>
 #include <vector>
 #include <list>
+#include <tuple>
 
 class ProcessorManager
 {
@@ -51,6 +53,11 @@ public:
 		return true;
 	}
 
+	int countProcessor() {
+		if (processor_vec_.empty()) return 0;
+		else return processor_vec_.size();
+	}
+
 	int countAvailable() {
 		int count = 0;
 		for (Processor& processor : processor_vec_) {
@@ -60,13 +67,42 @@ public:
 		return count;
 	}
 
-	bool addProcess(Process* _process) {
+	/// <returns>core idx, max time</returns>
+	std::pair<int, int> maxCurBurstTime() {
+		int max_idx = -1;
+		int max_value = -1;
+
+		for (int i = 0; i < processor_vec_.size(); i++)
+		{
+			int burst_time = 987654321;
+
+			if (processor_vec_[i].isRun()) {
+				burst_time = processor_vec_[i].getCurProcess()->getCurBurstTime();
+			}
+
+			if (burst_time > max_value) {
+				max_idx = i;
+				max_value = burst_time;
+			}
+		}
+
+		return { max_idx, max_value };
+	}
+
+	Processor& getProcessor(int idx) {
+		if (processor_vec_.size() <= idx) {
+			throw std::exception("processor_vec overflow");
+		}
+		return processor_vec_[idx];
+	}
+
+	bool addProcess(std::shared_ptr<Process> _process) {
 		int psr_size = processor_vec_.size();
 
 		for (int i = 0; i < psr_size; i++)
 		{
 			if (!processor_vec_[i].isRun()) {
-				processor_vec_[i].addProcess(std::shared_ptr<Process>(_process));
+				processor_vec_[i].addProcess(_process);
 				return true;
 			}
 		}
@@ -85,6 +121,15 @@ public:
 			}
 		}
 		return _process_queue.empty();
+	}
+
+	void printStat(int total_time) {
+		std::cout << "\n\ntotal : " << total_time << '\n';
+		
+		for (Processor& psr : processor_vec_)
+		{
+			psr.printStat();
+		}
 	}
 
 	void printHistory(int total_time) {

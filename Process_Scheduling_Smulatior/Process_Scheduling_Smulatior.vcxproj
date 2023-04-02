@@ -142,7 +142,7 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="FcfsScheduler.h" />
+    <ClInclude Include="FCFSScheduler.h" />
     <ClInclude Include="Job.h" />
     <ClInclude Include="JobSimulator.h" />
     <ClInclude Include="Process.h" />
@@ -150,6 +150,7 @@
     <ClInclude Include="ProcessorManager.h" />
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="SchedulerManager.h" />
+    <ClInclude Include="STRNScheduler.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

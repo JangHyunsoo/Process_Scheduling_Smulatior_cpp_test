@@ -29,8 +29,8 @@ public:
 	ProcessorType getType() {
 		return processor_type_;
 	}
-	Process& getCurProcess() {
-		return *cur_process_;
+	std::shared_ptr<Process> getCurProcess() {
+		return cur_process_;
 	}
 	bool isRun() {
 		if (cur_process_ == nullptr) return false;
@@ -56,11 +56,22 @@ public:
 		}
 	}
 
+	void printStat() {
+		std::cout << "Core No : " << processor_no_ << '\n';
+		if (cur_process_ != nullptr) {
+			std::cout << "Cur_Processor : " << cur_process_->getNo() << '\n';
+			std::cout << "Cur_BurstTime : " << cur_process_->getCurBurstTime() << '\n';
+
+		}
+		else std::cout << "Cur_Processor : -1\n";
+		
+	}
+
 	void printHistory(int total_time) {
 		std::cout << "P" << processor_no_ << " :\t";
-		for (int i = 0; i <= total_time; i++)
+		for (int i = 0; i < total_time; i++)
 		{
-			if (history_.size() - 1 <= i) {
+			if (history_.size() <= i) {
 				std::cout << "0\t";
 			}
 			else {

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="헤더 파일\Scheduler">
+      <UniqueIdentifier>{843ab9d4-42e4-4af8-b62f-7ce5281d0a84}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -41,8 +44,11 @@
     <ClInclude Include="SchedulerManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="FcfsScheduler.h">
-      <Filter>헤더 파일</Filter>
+    <ClInclude Include="FCFSScheduler.h">
+      <Filter>헤더 파일\Scheduler</Filter>
+    </ClInclude>
+    <ClInclude Include="STRNScheduler.h">
+      <Filter>헤더 파일\Scheduler</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

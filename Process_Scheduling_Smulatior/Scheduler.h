@@ -2,11 +2,11 @@
 #include "Processor.h"
 #include <queue>
 #include <list>
+#include <memory>
 
 class Scheduler
 {
 protected:
-	std::queue<Process*> process_queue_;
 	bool is_done_;
 public:
 	Scheduler() : is_done_(false) {}
@@ -21,15 +21,19 @@ public:
 	virtual void init(){}
 	virtual void logic(int _total_tick) {}
 	void tick(int _total_tick) {
-		addProcess(_total_tick);
 		logic(_total_tick);
 	}
-	void addProcess(int _total_tick) {
-		std::list<Job>& jobs = JobSimulator::getInstance()->getJobs(_total_tick);
+protected:
+	std::unique_ptr<std::queue<std::shared_ptr<Process>>> getEnterProcess(int _total_tick) {
+		std::unique_ptr<std::queue<std::shared_ptr<Process>>> result = std::make_unique<std::queue<std::shared_ptr<Process>>>();
+
+		std::unique_ptr<std::list<Job>> jobs = JobSimulator::getInstance()->getJobs(_total_tick);
 		
-		for (Job& job : jobs) {
-			process_queue_.push(new Process(job));
+		for (Job& job : *jobs) {
+			result->push(std::make_shared<Process>(job));
 		}
+
+		return std::move(result);
 	}
 };
 

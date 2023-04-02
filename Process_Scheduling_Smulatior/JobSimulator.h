@@ -32,7 +32,7 @@ private:
 	std::random_device rd;
 	std::mt19937 gen;
 	std::uniform_int_distribution<int> arrival_time_dis_;
-	std::uniform_int_distribution<int> brust_time_dis_;
+	std::uniform_int_distribution<int> burst_time_dis_;
 public:
 	void init() {
 		job_vec_ = std::vector<Job>();
@@ -62,33 +62,35 @@ public:
 		job_queue_.pop();
 		return job;
 	}
-	std::list<Job>& getJobs(int total_tick) {
-		std::list<Job>* ret = new std::list<Job>();
+	std::unique_ptr<std::list<Job>> getJobs(int total_tick) {
+		std::unique_ptr<std::list<Job>> ret = std::make_unique<std::list<Job>>();
 		
-		if (job_queue_.empty()) return *ret;
+		if (job_queue_.empty()) return std::move(ret);
 	
 		while (!job_queue_.empty())
 		{
-			if (job_queue_.front().arrival_time <= total_tick) {
+			if (job_queue_.front().arrival_time == total_tick) {
 				ret->push_back(job_queue_.front());
 				job_queue_.pop();
 			}
 			else break;
 		}
-		return *ret;
+		return std::move(ret);
 	}
 private:
 	void initRandom() {
 		gen = std::mt19937(rd());
 		arrival_time_dis_ = std::uniform_int_distribution<int>(0, 20);
-		brust_time_dis_ = std::uniform_int_distribution<int>(1, 5);
+		burst_time_dis_ = std::uniform_int_distribution<int>(1, 10);
 	}
-	void addJob(int _arrival_time, int _brust_time) {
+	void addJob(int _arrival_time, int _burst_time) {
 		
-		job_vec_.push_back(Job{++job_count, _arrival_time, _brust_time });
+		job_vec_.push_back(Job{++job_count, _arrival_time, _burst_time });
 	}
 	void addJobByRandom() {
-		addJob(arrival_time_dis_(gen), brust_time_dis_(gen));
+		int at = arrival_time_dis_(gen);
+		int bt = burst_time_dis_(gen);
+		addJob(at, bt);
 	}
 	void carryQueue() {
 		std::sort(job_vec_.begin(), job_vec_.end(), [](Job one, Job other){
@@ -101,7 +103,7 @@ private:
 	}
 
 	void printJob(Job& job) {
-		std::cout << "No: " << job.job_no << "\t\tA.T: " << job.arrival_time << "\t\tB.T: " << job.brust_time << '\n';
+		std::cout << "No: " << job.job_no << "\t\tA.T: " << job.arrival_time << "\t\tB.T: " << job.burst_time << '\n';
 	}
 
 };

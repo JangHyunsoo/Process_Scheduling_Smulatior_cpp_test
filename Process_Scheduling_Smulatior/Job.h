@@ -3,5 +3,5 @@ struct Job
 {
 	int job_no;
 	int arrival_time;
-	int brust_time;
+	int burst_time;
 };
