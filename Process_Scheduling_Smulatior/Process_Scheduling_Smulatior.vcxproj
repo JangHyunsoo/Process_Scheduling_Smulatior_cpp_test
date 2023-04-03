@@ -143,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FCFSScheduler.h" />
+    <ClInclude Include="HRRNSchuduler.h" />
     <ClInclude Include="Job.h" />
     <ClInclude Include="JobSimulator.h" />
     <ClInclude Include="Process.h" />

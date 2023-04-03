@@ -9,6 +9,6 @@ using namespace std;
 
 int main()
 {
-	SchedulerManager::getInstance()->init(ScheduleWay::SPN);
+	SchedulerManager::getInstance()->init(ScheduleWay::HRRN);
 	SchedulerManager::getInstance()->run();
 }

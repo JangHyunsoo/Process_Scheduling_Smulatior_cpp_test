@@ -53,5 +53,8 @@
     <ClInclude Include="SPNScheduler.h">
       <Filter>헤더 파일\Scheduler</Filter>
     </ClInclude>
+    <ClInclude Include="HRRNSchuduler.h">
+      <Filter>헤더 파일\Scheduler</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
