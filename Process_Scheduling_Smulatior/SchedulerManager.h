@@ -4,6 +4,7 @@
 #include "Scheduler.h"
 #include "FCFSScheduler.h"
 #include "STRNScheduler.h"
+#include "SPNScheduler.h"
 #include <iostream>
 
 enum class ScheduleWay {
@@ -57,7 +58,7 @@ private:
 			cur_scheduler_ = new Scheduler();
 			break;
 		case ScheduleWay::SPN:
-			cur_scheduler_ = new Scheduler();
+			cur_scheduler_ = new SPNScheduler();
 			break;
 		case ScheduleWay::SRTN:
 			cur_scheduler_ = new STRNScheduler();

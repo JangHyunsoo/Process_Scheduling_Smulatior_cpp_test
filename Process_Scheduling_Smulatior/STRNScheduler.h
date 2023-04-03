@@ -6,18 +6,18 @@
 #include <memory>
 #include <iostream>
 
-struct ProcessCompare
+struct STRNCompare
 {
 	bool operator()(std::shared_ptr<Process> one, std::shared_ptr<Process> other) {
-		if (one->getCurBurstTime() == other->getCurBurstTime()) return one->getNo() > other->getNo();
-		else return one->getCurBurstTime() > other->getCurBurstTime();
+		if (one->getBurstTime() == other->getBurstTime()) return one->getNo() > other->getNo();
+		else return one->getBurstTime() > other->getBurstTime();
 	}
 };
 
 class STRNScheduler : public Scheduler
 {
 private:
-	std::priority_queue<std::shared_ptr<Process>, std::vector<std::shared_ptr<Process>>, ProcessCompare> process_pq_;
+	std::priority_queue<std::shared_ptr<Process>, std::vector<std::shared_ptr<Process>>, STRNCompare> process_pq_;
 
 public:
 	STRNScheduler() : Scheduler() {}
@@ -33,29 +33,17 @@ public:
 		auto psr_mgr = ProcessorManager::getInstance();
 		std::unique_ptr<std::queue<std::shared_ptr<Process>>> enter_process = getEnterProcess(total_tick);
 
-		while (!enter_process->empty())
-		{
+		while (!enter_process->empty()) {
 			std::shared_ptr<Process> process = enter_process->front();
 			process_pq_.push(process);
 			enter_process->pop();
 		}
 
-		while (!process_pq_.empty())
+		while (psr_mgr->countAvailable() > 0 && !process_pq_.empty())
 		{
-			auto max_pair = psr_mgr->maxCurBurstTime();
 			std::shared_ptr<Process> process = process_pq_.top();
-			if (max_pair.second <= process->getCurBurstTime()) {
-				break;
-			}
-			else {
-				Processor& processor = psr_mgr->getProcessor(max_pair.first);
-				if (max_pair.second != 987654321) {
-					process_pq_.push(processor.getCurProcess());
-				}
-				processor.addProcess(process);
-				process_pq_.pop();
-			}
-
+			psr_mgr->addProcess(process);
+			process_pq_.pop();
 		}
 
 		psr_mgr->tick();
