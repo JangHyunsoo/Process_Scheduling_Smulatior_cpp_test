@@ -67,6 +67,16 @@ public:
 		return count;
 	}
 
+	int countQuantumAvailable() {
+		int count = 0;
+		for (Processor& processor : processor_vec_) {
+			if (!processor.isRunQuantum()) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	/// <returns>core idx, max time</returns>
 	std::pair<int, int> maxCurBurstTime() {
 		int max_idx = -1;
@@ -94,6 +104,23 @@ public:
 			throw std::exception("processor_vec overflow");
 		}
 		return processor_vec_[idx];
+	}
+
+	Processor& getAvailableProcessor() {
+		for (Processor& processor : processor_vec_) {
+			if (!processor.isRun())
+				return processor;
+		}
+		return processor_vec_[0];
+	}
+
+	Processor& getQuantumAvailableProcessor() {
+		for (Processor& processor : processor_vec_) {
+			if (!processor.isRunQuantum()) {
+				return processor;
+			}
+		}
+		return processor_vec_[0];
 	}
 
 	bool addProcess(std::shared_ptr<Process> _process) {

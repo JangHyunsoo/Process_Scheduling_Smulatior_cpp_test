@@ -1,4 +1,5 @@
 #pragma once
+#include "ProcessorManager.h"
 #include "Scheduler.h"
 #include "Processor.h"
 #include <queue>
@@ -9,8 +10,8 @@
 struct STRNCompare
 {
 	bool operator()(std::shared_ptr<Process> one, std::shared_ptr<Process> other) {
-		if (one->getBurstTime() == other->getBurstTime()) return one->getNo() > other->getNo();
-		else return one->getBurstTime() > other->getBurstTime();
+		if (one->getCurBurstTime() == other->getCurBurstTime()) return one->getNo() > other->getNo();
+		else return one->getCurBurstTime() > other->getCurBurstTime();
 	}
 };
 
@@ -33,17 +34,29 @@ public:
 		auto psr_mgr = ProcessorManager::getInstance();
 		std::unique_ptr<std::queue<std::shared_ptr<Process>>> enter_process = getEnterProcess(total_tick);
 
-		while (!enter_process->empty()) {
+		while (!enter_process->empty())
+		{
 			std::shared_ptr<Process> process = enter_process->front();
 			process_pq_.push(process);
 			enter_process->pop();
 		}
 
-		while (psr_mgr->countAvailable() > 0 && !process_pq_.empty())
+		while (!process_pq_.empty())
 		{
+			auto max_pair = psr_mgr->maxCurBurstTime();
 			std::shared_ptr<Process> process = process_pq_.top();
-			psr_mgr->addProcess(process);
-			process_pq_.pop();
+			if (max_pair.second <= process->getCurBurstTime()) {
+				break;
+			}
+			else {
+				Processor& processor = psr_mgr->getProcessor(max_pair.first);
+				std::shared_ptr<Process> swap_process = processor.swapProcess(process);
+				process_pq_.pop();
+				if (swap_process != nullptr) {
+					process_pq_.push(swap_process);
+				}
+			}
+
 		}
 
 		psr_mgr->tick();

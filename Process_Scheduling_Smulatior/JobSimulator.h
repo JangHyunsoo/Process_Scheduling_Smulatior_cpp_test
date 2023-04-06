@@ -42,12 +42,11 @@ public:
 		{
 			addJobByRandom();
 		}
-
+		carryQueue();
 		for (auto job : job_vec_)
 		{
 			printJob(job);
 		}
-		carryQueue();
 	}
 	bool isEmpty() {
 		return job_queue_.empty();

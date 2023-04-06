@@ -149,6 +149,7 @@
     <ClInclude Include="Process.h" />
     <ClInclude Include="Processor.h" />
     <ClInclude Include="ProcessorManager.h" />
+    <ClInclude Include="RRScheduler.h" />
     <ClInclude Include="Scheduler.h" />
     <ClInclude Include="SchedulerManager.h" />
     <ClInclude Include="SPNScheduler.h" />

@@ -6,6 +6,7 @@
 #include "STRNScheduler.h"
 #include "SPNScheduler.h"
 #include "HRRNSchuduler.h"
+#include "RRScheduler.h"
 #include <iostream>
 
 enum class ScheduleWay {
@@ -24,7 +25,8 @@ private:
 	SchedulerManager() {}
 	~SchedulerManager() {}
 public:
-	static SchedulerManager* getInstance() {		if (instance_ == nullptr) {
+	static SchedulerManager* getInstance() {
+		if (instance_ == nullptr) {
 			instance_ = new SchedulerManager();
 		}
 		return instance_;
@@ -33,9 +35,9 @@ private:
 	int total_tick_;
 	Scheduler* cur_scheduler_;
 public:
-	void init(ScheduleWay _way) {
+	void init(ScheduleWay _way, int _time_quantum = 2) {
 		total_tick_ = 0;
-		assignScheduler(_way);
+		assignScheduler(_way, 2);
 		JobSimulator::getInstance()->init();
 		ProcessorManager::getInstance()->init();
 		cur_scheduler_->init();
@@ -49,14 +51,14 @@ public:
 		ProcessorManager::getInstance()->printHistory(total_tick_);
 	}
 private:
-	void assignScheduler(ScheduleWay _way) {
+	void assignScheduler(ScheduleWay _way, int _time_quantum = 2) {
 		switch (_way)
 		{
 		case ScheduleWay::FCFS:
 			cur_scheduler_ = new FCFSScheduler();
 			break;
 		case ScheduleWay::RR:
-			cur_scheduler_ = new Scheduler();
+			cur_scheduler_ = new RRScheduler(_time_quantum);
 			break;
 		case ScheduleWay::SPN:
 			cur_scheduler_ = new SPNScheduler();

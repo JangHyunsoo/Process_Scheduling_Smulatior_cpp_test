@@ -36,11 +36,22 @@ public:
 		if (cur_process_ == nullptr) return false;
 		else return is_run_;
 	}
+	bool isRunQuantum() {
+		if (cur_process_ == nullptr) return false;
+		else return cur_process_->getQuantumTime() > 0 && is_run_;
+	}
 
 	void addProcess(std::shared_ptr<Process> _process) {
 		cur_process_ = _process;
 		is_run_ = true;
 	}
+
+	std::shared_ptr<Process> swapProcess(std::shared_ptr<Process> _process) {
+		std::shared_ptr<Process> swap_process = cur_process_;
+		addProcess(_process);
+		return swap_process;
+	}
+
 	void tick() {
 		if (is_run_) {
 			cur_process_->tick(processor_type_ == ProcessorType::EFFIC ? 1 : 2);
